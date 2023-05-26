@@ -1,0 +1,46 @@
+version: '3'
+services:
+
+  backend:
+    build: ./stusy-api
+    restart: on-failure
+    container_name: stusy-api
+    environment:
+      - SECRET=cannabis
+      - PORT=8080
+      - DB_NAME=ecosys
+      - DB_PASS=asd1qwd
+      - DB_USER=root
+      - DB_HOST=stusy-db
+    ports:
+      - 8080:8080
+    networks:
+      - fullstack
+
+  frontend:
+    build: ./stusy-ui
+    container_name: stusy-ui
+    ports:
+      - 80:80
+
+  database:
+    image: mariadb:10.8.2 
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=asd1qwd
+      - MARIADB_DATABASE=ecosys
+      - MARIADB_ROOT_HOST=%
+    ports:
+      - 3306:3306
+    volumes:
+      - ./stusy-db:/var/lib/mysql
+    container_name: stusy-db
+    networks:
+      - fullstack
+
+networks:
+  fullstack:
+    driver: bridge
+
+volumes:
+  stusy-db:
